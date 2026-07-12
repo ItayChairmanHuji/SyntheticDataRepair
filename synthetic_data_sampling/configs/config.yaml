@@ -1,0 +1,5 @@
+data_name: adult
+model: mst 
+epsilon: 1.0
+num_samples: 500000
+seed: 0

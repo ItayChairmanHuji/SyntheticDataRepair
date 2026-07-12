@@ -1,0 +1,12 @@
+results/ 
+.vscode/
+.venv/
+.pytest_cache/
+*__pycache__*
+gurobi.lic
+logs
+grbnodes*/
+multirun/
+outputs/
+resources/
+scripts/
