@@ -35,10 +35,16 @@ def vanilla_vc_repair(data: pd.DataFrame, dcs: DenialConstraints):
 
 @hydra.main(version_base=None, config_path="configs", config_name="config")
 def main(cfg: DictConfig):
-    synth_data = pd.read_csv(cfg.synthetic_data_path)
-    dcs = DenialConstraints(cfg.denial_constraints)
-    return vanilla_vc_repair(synth_data, dcs)
-
+    synth_data = pd.read_csv(cfg.input_path)
+    dcs = DenialConstraints(cfg.dcs_file)
+    output = vanilla_vc_repair(synth_data, dcs)
+    output[0].to_csv(cfg.output_path, index=False)
+    print(f"Repair time: {output[1]:.2f} seconds")
+    return output
 
 if __name__ == "__main__":
-    main()
+    main(DictConfig({
+        "input_path": "resources/data/private/adult.csv",
+        "output_path": "resources/models/repaired.csv",
+        "dcs_file": "resources/dcs/adult.dcs",
+    }))

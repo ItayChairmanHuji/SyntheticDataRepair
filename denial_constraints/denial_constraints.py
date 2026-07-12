@@ -7,16 +7,7 @@ from denial_constraints.denial_constraint import DenialConstraint
 
 @dataclass
 class DenialConstraints:
-    BASE_PATH = Path("resources/constraints/")
-
     constraints: list[DenialConstraint]
-
-    @classmethod
-    def from_dataset_name(cls, dataset_name: str | Path) -> Self:
-        path = Path(dataset_name)
-        if path.exists() or path.suffix:
-            return cls.from_file(path)
-        return cls.from_file(cls.BASE_PATH / f"{dataset_name}.txt")
 
     @classmethod
     def from_file(cls, path: str | Path) -> Self:

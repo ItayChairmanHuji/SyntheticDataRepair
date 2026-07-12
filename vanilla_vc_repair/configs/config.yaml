@@ -1,1 +1,3 @@
-synth_data_id: "adult_synth_0000"
+input_path: "resources/data/private/adult.csv"
+output_path: "resources/models/repaired.csv"
+dcs_file: "resources/dcs/adult.dcs"

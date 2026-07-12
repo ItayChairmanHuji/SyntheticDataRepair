@@ -7,11 +7,8 @@ from marginals.marginal import Marginal
 
 
 class Marginals:
-    BASE_PATH = Path("resources/marginals/")
-
-    def __init__(self, dataset_name: str, size: int, seed: int, base_path: Path | None = None):
-        base_path = self.BASE_PATH if base_path is None else base_path
-        marginals = pd.read_csv(base_path / f"{dataset_name}_{size}_{seed}.csv")
+    def __init__(self, path: Path):
+        marginals = pd.read_csv(path)
         self.marginals = []
         for _, row in marginals.iterrows():
             attrs = [row["attr1"], row["attr2"]]

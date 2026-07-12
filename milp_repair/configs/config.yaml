@@ -1,3 +1,5 @@
 input_path: "resources/data/data.csv"
 dcs_file: "resources/constraints/adult.txt"
+marginals_file: "resources/marginals/adult.csv"
+alpha: 0.5
 output_path: "resources/data/repaired.csv"
