@@ -31,6 +31,8 @@ def compute_two_way_marginals(data: pd.DataFrame) -> pd.DataFrame:
 
     return pd.concat(marginals, ignore_index=True)[["attr1", "attr2", "value1", "value2", "probability"]]
 
+def sample_marginals(marginals: pd.DataFrame, num_of_marginals: int, seed: int) -> pd.DataFrame:
+    return marginals.sample(frac=1, random_state=seed).iloc[: num_of_marginals].reset_index(drop=True)
 
 def add_noise(marginals: pd.DataFrame, size: int, rho: float = 1, seed: int = 42) -> pd.DataFrame:
     rng = np.random.default_rng(seed)
@@ -40,25 +42,20 @@ def add_noise(marginals: pd.DataFrame, size: int, rho: float = 1, seed: int = 42
     return marginals
 
 
-def load_input(data_name: str, input_dir: Path) -> pd.DataFrame:
-    input_path = input_dir / f"{data_name}_private" / "data.csv"
-    return pd.read_csv(input_path)
-
-
-def save_output(marginals: pd.DataFrame, data_name: str, seed: int, output_dir: Path) -> None:
-    output_dir.mkdir(parents=True, exist_ok=True)
-    output_path = output_dir / f"{data_name}_{len(marginals)}_{seed}.csv"
-    marginals.to_csv(output_path, index=False)
-
-
 @hydra.main(version_base=None, config_path="configs", config_name="config")
 def main(cfg: DictConfig) -> None:
-    data = load_input(cfg.data_name, Path(cfg.input_dir))
+    data = pd.read_csv(Path(cfg.input_path))
     marginals = compute_two_way_marginals(data)
-    marginals = marginals.sample(frac=1, random_state=cfg.seed).iloc[: cfg.num_of_marginals].reset_index(drop=True)
+    marginals = sample_marginals(marginals, cfg.num_of_marginals, cfg.seed)
     noisy_marginals = add_noise(marginals, len(data), rho=cfg.rho, seed=cfg.seed)
-    save_output(noisy_marginals, cfg.data_name, cfg.seed, Path(cfg.output_dir))
+    noisy_marginals.to_csv(Path(cfg.output_path))
 
 
 if __name__ == "__main__":
-    main()
+    main({
+        "input_path": "resources/data/private/adult.csv",
+        "output_path": "resources/marginals/adult_marginals.csv",
+        "num_of_marginals": 1000,
+        "rho": 1,
+        "seed": 42
+    })
