@@ -7,8 +7,11 @@ from marginals.marginal import Marginal
 
 
 class Marginals:
-    def __init__(self, path: Path):
-        marginals = pd.read_csv(path)
+    BASE_PATH = Path("resources/marginals/")
+
+    def __init__(self, dataset_name: str, size: int, seed: int, base_path: Path | None = None):
+        base_path = self.BASE_PATH if base_path is None else base_path
+        marginals = pd.read_csv(base_path / f"{dataset_name}_{size}_{seed}.csv")
         self.marginals = []
         for _, row in marginals.iterrows():
             attrs = [row["attr1"], row["attr2"]]
@@ -30,3 +33,16 @@ class Marginals:
 
     def distance(self, df: pd.DataFrame, df2: pd.DataFrame | None = None):
         return np.array([m.distance(df, df2) for m in self.marginals]).mean()
+
+    def cumulated_error(self, df: pd.DataFrame, df2: pd.DataFrame | None = None):
+        errors = np.array([m.error(df, df2) for m in self.marginals])
+        return np.array([errors[:i].mean() for i in range(10, len(errors) + 1, 10)])
+
+    def cumulated_distance(self, df: pd.DataFrame, df2: pd.DataFrame | None = None):
+        distances = np.array([m.distance(df, df2) for m in self.marginals])
+        return np.array([distances[:i].mean() for i in range(10, len(distances) + 1, 10)])
+
+    @staticmethod
+    def max_marginals(dataset_name: str) -> int:
+        marginals = pd.read_csv(Marginals.BASE_PATH / f"{dataset_name}.csv")
+        return len(marginals)
