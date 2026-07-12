@@ -1,5 +1,4 @@
-data_name: adult
-model: mst 
-epsilon: 1.0
-num_samples: 500000
-seed: 0
+model_path: "resources/models/adult_mst_1.0.dill",
+output_path: "resources/data/synthetic/adult_synthetic.csv",
+synthetic_seed: 42,
+size: 10000

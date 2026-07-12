@@ -15,30 +15,22 @@ def set_seed(seed: int) -> None:
     torch.manual_seed(seed)
 
 
-def load_model(data_name: str, model_name: str, epsilon: float) -> Synthesizer:
-    input_dir = Path("resources/models/")
-    input_path = input_dir / f"{data_name}_{model_name}_{epsilon}.csv"
-    with open(input_path, "rb") as f:
+def load_model(model_path: Path) -> Synthesizer:
+    with open(model_path, "rb") as f:
         model = dill.load(f)
     return model
 
-
-def synthetic_data_sampling(synthetic_seed: int, dataset_name: str, model_name: str, epsilon: float, size: int):
-    set_seed(synthetic_seed)
-    model = load_model(dataset_name, model_name, epsilon)
-    return model.sample(size)
-
-
 @hydra.main(version_base=None, config_path="configs", config_name="config")
 def main(cfg: DictConfig) -> None:
-    synthetic_data_sampling(
-        synthetic_seed=cfg.synthetic_seed,
-        dataset_name=cfg.dataset,
-        model_name=cfg.model,
-        epsilon=cfg.epsilon,
-        size=cfg.size,
-    )
-
+    set_seed(cfg.synthetic_seed)
+    model = load_model(Path(cfg.model_path))
+    data = model.sample(size)
+    data.to_csv(Path(cfg.output_path))
 
 if __name__ == "__main__":
-    main()
+    main(DictConfig({
+        "model_path": "resources/models/adult_mst_1.0.dill",
+        "output_path": "resources/data/synthetic/adult_synthetic.csv",
+        "synthetic_seed": 42,
+        "size": 10000
+    }))

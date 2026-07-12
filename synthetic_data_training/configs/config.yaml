@@ -1,5 +1,5 @@
-input_dir: resources/data/private
-output_dir: resources/models/
+input_path: resources/data/private/adult.csv
+output_path: resources/models/mst_adult_1.0.dill
 data_name: adult
 model: mst 
 epsilon: 1.0
