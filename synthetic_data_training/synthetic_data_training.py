@@ -31,7 +31,7 @@ def save_runtime(training_time: float, data_name: str, output_dir: Path, eps: fl
 
 @hydra.main(version_base=None, config_path="configs", config_name="config")
 def main(cfg: DictConfig) -> None:
-    data = pd.read_csv(cfg.input_path)
+    data = pd.read_csv(Path(cfg.input_dir) / f"{cfg.data_name}.csv")
     synth, training_time = train_model(data, cfg.model, cfg.epsilon)
     save_model(synth, cfg.data_name, Path(cfg.output_dir), cfg.epsilon, cfg.model)
     save_runtime(training_time, cfg.data_name, Path(cfg.output_dir), cfg.epsilon, cfg.model)
@@ -39,7 +39,7 @@ def main(cfg: DictConfig) -> None:
 
 if __name__ == "__main__":
     main(DictConfig({
-        "input_path": "resources/data/private/adult.csv",
+        "input_dir": "resources/data/private",
         "output_dir": "resources/models/",
         "data_name": "adult",
         "model": "mst",
