@@ -1,4 +1,4 @@
-input_path: resources/data/private/adult.csv
+input_dir: resources/data/private
 output_dir: resources/models/
 data_name: adult
 model: mst 
