@@ -1,7 +1,7 @@
 # Synthetic Data Repair
 
-This is the code base that implements the paper "Repairing Privately Generated Synthetic Data with Integrity and
-Statistical Considerations". The code is written in Python and is based on the Hydra framework.
+This is the code base that implements the paper "Fixing the Release: Faithful Post-Hoc Repair of
+Differentially Private Synthetic Data". The code is written in Python and is based on the Hydra framework.
 
 ## Basic Setup
 
